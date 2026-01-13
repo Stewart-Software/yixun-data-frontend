@@ -27,9 +27,9 @@ import { convertToCSV, downloadCSV, formatDateForFilename } from "@/utils/csv";
 import { cleanGoodsDescription } from "@/utils/textCleaning";
 import { Download, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-export default function CompanyDetailPage() {
+function CompanyDetailContent() {
   const searchParams = useSearchParams();
   const defaultDates = getDefaultDateRange();
 
@@ -682,5 +682,15 @@ export default function CompanyDetailPage() {
         </Card>
       ) : null}
     </div>
+  );
+}
+
+export default function CompanyDetailPage() {
+  return (
+    <Suspense
+      fallback={<div className="max-w-7xl mx-auto p-6">Loading...</div>}
+    >
+      <CompanyDetailContent />
+    </Suspense>
   );
 }
