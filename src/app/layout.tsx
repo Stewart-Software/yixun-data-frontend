@@ -1,3 +1,4 @@
+import { Navbar } from "@/components/Navbar";
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
@@ -14,8 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
+      <body className="bg-gray-50 min-h-screen">
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );

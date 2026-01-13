@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getAxiosErrorMessage } from "..";
-import { getStartUrl } from "../environment";
 import {
   CompaniesQuery,
   CompaniesResponse,
@@ -11,21 +10,9 @@ import {
 
 export async function listCompanies(params: CompaniesQuery) {
   try {
-    const START_URL = getStartUrl();
-
-    if (!START_URL) {
-      throw new Error("START_URL is not defined in the environment.");
-    }
-
-    //   if (!process.env.NEXT_PUBLIC_API_KEY) {
-    //     throw new Error("API_KEY is not defined in the environment.");
-    //   }
-
-    //   axios.defaults.headers["X-API-KEY"] = process.env.NEXT_PUBLIC_API_KEY;
-
     const options = {
       method: "POST",
-      url: `${START_URL}/companies/list`,
+      url: `/api/companies/list`,
       data: params,
     };
 
@@ -38,21 +25,9 @@ export async function listCompanies(params: CompaniesQuery) {
 
 export async function getCompanyDetail(params: CompanyDetailQuery) {
   try {
-    const START_URL = getStartUrl();
-
-    if (!START_URL) {
-      throw new Error("START_URL is not defined in the environment.");
-    }
-
-    //   if (!process.env.NEXT_PUBLIC_API_KEY) {
-    //     throw new Error("API_KEY is not defined in the environment.");
-    //   }
-
-    //   axios.defaults.headers["X-API-KEY"] = process.env.NEXT_PUBLIC_API_KEY;
-
     const options = {
       method: "POST",
-      url: `${START_URL}/companies/detail`,
+      url: `/api/companies/detail`,
       data: params,
     };
 
@@ -65,21 +40,9 @@ export async function getCompanyDetail(params: CompanyDetailQuery) {
 
 export async function getCompanyEnrichment(params: { companyName: string }) {
   try {
-    const START_URL = getStartUrl();
-
-    if (!START_URL) {
-      throw new Error("START_URL is not defined in the environment.");
-    }
-
-    //   if (!process.env.NEXT_PUBLIC_API_KEY) {
-    //     throw new Error("API_KEY is not defined in the environment.");
-    //   }
-
-    //   axios.defaults.headers["X-API-KEY"] = process.env.NEXT_PUBLIC_API_KEY;
-
     const options = {
       method: "POST",
-      url: `${START_URL}/companies/enrichment`,
+      url: `/api/companies/enrichment`,
       data: params,
     };
 
@@ -87,5 +50,6 @@ export async function getCompanyEnrichment(params: { companyName: string }) {
     return response.data as CompanyEnrichmentResponse;
   } catch (error) {
     getAxiosErrorMessage(error, "Failed to fetch company enrichment.");
+    throw error; // This won't be reached, but TypeScript needs it
   }
 }

@@ -134,7 +134,8 @@ export function accumulateCompanyDetail(
 
 export function useCompanyDetail(
   params: Omit<CompanyDetailQuery, "pageNo">,
-  maxPages = 200
+  maxPages = 200,
+  enabled = false
 ) {
   const pageSize = 200;
 
@@ -161,8 +162,10 @@ export function useCompanyDetail(
           : undefined;
       }
     },
-    enabled: !!params.companyName,
-    staleTime: 30_000,
+    enabled: !!params.companyName && enabled,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    retry: 2,
   });
 
   /* --------------------------------------- */

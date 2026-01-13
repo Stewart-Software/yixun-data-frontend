@@ -14,34 +14,17 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000,
+            staleTime: 5 * 60 * 1000, // 5 minutes - data doesn't change frequently
+            gcTime: 10 * 60 * 1000, // 10 minutes - keep in cache
+            retry: 2, // Retry failed requests twice
+            refetchOnWindowFocus: false, // Don't refetch on window focus (UX preference)
+            refetchOnReconnect: true, // Refetch when reconnecting
           },
         },
       })
   );
 
   return (
-    // <ClerkProvider
-    //   publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    // >
-    <QueryClientProvider client={queryClient}>
-      {/* <AutoLogoutProvider> */}
-      {/* <FilterContextWrapper> */}
-      {/* <SidebarProvider>
- 
-                <AppSidebar /> */}
-
-      <main className="flex flex-col w-full max-w-full p-4">
-        {/* <SidebarTrigger />
-         */}
-
-        <div className="">{children}</div>
-      </main>
-
-      {/* <Toaster />
-            </SidebarProvider>
-          </FilterContextWrapper> */}
-    </QueryClientProvider>
-    // </ClerkProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }

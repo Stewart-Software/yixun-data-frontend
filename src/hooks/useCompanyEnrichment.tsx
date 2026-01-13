@@ -1,28 +1,26 @@
+"use client";
+
 import { getCompanyEnrichment } from "@/utils/companies";
 import { CompanyEnrichmentResponse } from "@/utils/companies/types";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-export function useCompanyEnrichment(companyName: string) {
-  const [enrichment, setEnrichment] = useState<
-    CompanyEnrichmentResponse | undefined
-  >(undefined);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export function useCompanyEnrichment(
+  companyName: string,
+  enabled: boolean = false
+) {
+  const { data, isLoading, error, refetch } =
+    useQuery<CompanyEnrichmentResponse>({
+      queryKey: ["companyEnrichment", companyName],
+      queryFn: () => getCompanyEnrichment({ companyName }),
+      enabled: enabled && !!companyName,
+      staleTime: 30 * 60 * 1000, // 30 minutes - enrichment data changes rarely
+      retry: 1, // Only retry once for enrichment
+    });
 
-  const fetchEnrichment = async () => {
-    if (!companyName) return;
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await getCompanyEnrichment({ companyName });
-      setEnrichment(data);
-    } catch (err: any) {
-      setError(err?.message || "Failed to fetch company enrichment");
-    } finally {
-      setLoading(false);
-    }
+  return {
+    enrichment: data,
+    loading: isLoading,
+    error: error ? String(error) : null,
+    fetchEnrichment: refetch,
   };
-
-  return { enrichment, loading, error, fetchEnrichment };
 }

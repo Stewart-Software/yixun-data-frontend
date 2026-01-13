@@ -75,6 +75,7 @@ export function accumulateProductInsight(
 /* ---------------------------- */
 export function useProductInsight(
   params: Omit<ProductInsightQuery, "pageNo">,
+  enabled: boolean = true,
   maxPages = 200
 ) {
   const pageSize = 200;
@@ -99,8 +100,10 @@ export function useProductInsight(
         ? lastPage.pagination.pageNo + 1
         : undefined;
     },
-    enabled: !!params.goodsDesc?.length || !!params.hsCode?.length,
-    staleTime: 30_000,
+    enabled: enabled && (!!params.goodsDesc?.length || !!params.hsCode?.length),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    retry: 2,
   });
 
   /* ---------------------------- */
